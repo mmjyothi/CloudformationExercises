@@ -1,0 +1,11 @@
+Command to run the exercise8 template.
+
+aws cloudformation create-stack --stack-name exercise8 --template-url https://s3-eu-west-1.amazonaws.com/cloudformation-exercises/exercise8.template --parameters  ParameterKey=KeyName,ParameterValue=MyEC2Key ParameterKey=InstanceType,ParameterValue=t2.micro --region eu-west-1
+
+Prerequistes 
+
+1. MyEC2Key- pair keys in EC2 console
+
+Reference
+
+http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/updating.stacks.walkthrough.html
