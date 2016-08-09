@@ -1,0 +1,9 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Deploy a simple Amazon Linux Instance, using multiple templates to demonstrate parent/child relationships. This template assumes you already have a VPC and IGW created.",
+	"Resources": {
+        "HelloBucket": {
+            "Type": "AWS::S3::Bucket"
+    	}
+    }
+}
