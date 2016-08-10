@@ -131,6 +131,7 @@
         "LoadBalancerName" : { "Fn::Join" : ["-",["hello", { "Ref" : "AWS::StackName" }]]},
         "AvailabilityZones" : { "Fn::GetAZs" : "" },
         "CrossZone" : "true",
+        "Instances" : [ { "Ref" : "WebServerInstance" }],
         "Listeners" : [ {
           "LoadBalancerPort" : "80",
           "InstancePort" : "80",
