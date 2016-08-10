@@ -21,3 +21,11 @@ This template is for create a ec2 Instance with a new securitygroup and existing
 
 [ec2-user@ip-172-31-43-204 CloudformationExercises]$ aws cloudformation delete-stack --stack-name myteststack
 
+Elastic Load Balancing template
+
+[ec2-user@ip-172-31-43-204 CloudformationExercises]$ aws cloudformation create-stack --stack-name myteststack --template-body file:////home//ec2-user//CloudformationExercises//ElasticLoadBalacing.template --parameters ParameterKey=KeyName,ParameterValue=EC2Key
+
+[ec2-user@ip-172-31-43-204 CloudformationExercises]$ aws cloudformation delete-stack --stack-name myteststack
+
+
+
