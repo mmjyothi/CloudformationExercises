@@ -1,7 +1,7 @@
 {
   "AWSTemplateFormatVersion" : "2010-09-09",
 
-  "Description" : "AWS CloudFormation Sample Template: Sample template that can be used to test EC2 updates. **WARNING** This template creates an Amazon Ec2 Instance. You will be billed for the AWS resources used if you create a stack from this template.",
+  "Description" : " Added Load Balancer Resources on the exercise 5 with ELB url in the output- AWS CloudFormation Sample Template: Sample template that can be used to test EC2 updates. **WARNING** This template creates an Amazon Ec2 Instance. You will be billed for the AWS resources used if you create a stack from this template.",
   
   "Parameters" : {
           
@@ -14,6 +14,10 @@
 "c3.4xlarge", "c3.8xlarge", "g2.2xlarge", "r3.large", "r3.xlarge", "r3.2xlarge", "r3.4xlarge", "r3.8xlarge", "i2.xlarge", "i2.2xlarge", "i2.4xlarge",
 "i2.8xlarge", "hi1.4xlarge", "hs1.8xlarge", "cr1.8xlarge", "cc2.8xlarge", "cg1.4xlarge"],
       "ConstraintDescription" : "must be a valid EC2 instance type."
+    },
+    "KeyName" : {
+          "Description" : "The EC2 Key Pair to allow SSH access to the instance",
+          "Type" : "AWS::EC2::KeyPair::KeyName"
     }
   },
     
@@ -81,7 +85,8 @@
       },
 
       "Properties": {
-        "ImageId" : "ami-f9dd458a",
+        "ImageId" : "ami-c39604b0",
+        "KeyName" : { "Ref" : "KeyName"},
         "InstanceType"   : { "Ref" : "InstanceType" },
         "SecurityGroups" : [ {"Ref" : "WebServerSecurityGroup"} ],
         "UserData"       : { "Fn::Base64" : { "Fn::Join" : ["", [
@@ -119,13 +124,39 @@
           {"IpProtocol" : "tcp", "FromPort" : "80", "ToPort" : "80", "CidrIp" : "0.0.0.0/0"}
         ]
       }      
-    }          
+    },
+   "ElasticLoadBalancer" : {
+      "Type" : "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties" : {
+        "LoadBalancerName" : { "Ref" : "AWS::StackName" },
+        "AvailabilityZones" : { "Fn::GetAZs" : "" },
+        "CrossZone" : "true",
+        "Listeners" : [ {
+          "LoadBalancerPort" : "80",
+          "InstancePort" : "80",
+          "Protocol" : "HTTP"
+        } ],
+        "HealthCheck" : {
+          "Target" : "HTTP:80/",
+          "HealthyThreshold" : "3",
+          "UnhealthyThreshold" : "2",
+          "Interval" : "10",
+          "Timeout" : "5"
+        }
+      }
+    }
+          
   },
   
   "Outputs" : {
     "WebsiteURL" : {
       "Description" : "Application URL",
       "Value" : { "Fn::Join" : ["", ["http://", { "Fn::GetAtt" : [ "WebServerInstance", "PublicDnsName" ]}]] }
+    },
+     "LBURL" : {
+      "Description" : "URL of the website",
+      "Value" :  { "Fn::Join" : [ "", [ "http://", { "Fn::GetAtt" : [ "ElasticLoadBalancer", "DNSName" ]}]]}
     }
+   
   }
 }
